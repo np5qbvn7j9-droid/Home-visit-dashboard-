@@ -83,6 +83,32 @@ body{font-family:"Cairo",sans-serif;background:var(--bg-base);color:var(--text-m
 .btn-export{background:linear-gradient(135deg,#34d399,#059669);border:none;color:#0f172a;padding:4px 12px;border-radius:6px;font-family:"Cairo";font-weight:700;font-size:0.72rem;cursor:pointer;display:flex;align-items:center;gap:4px;}
 /* Section titles */
 .section-title{font-size:1.02rem;font-weight:700;color:#38bdf8;margin:22px 0 11px;padding-right:12px;border-right:4px solid #38bdf8;scroll-margin-top:130px;}
+/* ── Mobile Layout ── */
+.mob-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--bg-card);border-top:1px solid var(--border);z-index:300;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.mob-bottom-nav::-webkit-scrollbar{display:none;}
+.mob-nav-btn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:64px;height:58px;color:var(--text-muted);font-size:0.56rem;font-family:'Cairo';font-weight:600;border:none;background:transparent;cursor:pointer;padding:6px 4px;transition:color 0.2s;border-top:2px solid transparent;}
+.mob-nav-btn.mob-active{color:#38bdf8;border-top-color:#38bdf8;}
+.mob-nav-btn .mob-icon{font-size:1.15rem;line-height:1;}
+.mob-section{display:block;}
+.mob-filter-toggle{display:none!important;}
+.mob-filter-panel{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:5px;padding:5px 8px;align-items:center;scrollbar-width:none;}
+.mob-filter-panel::-webkit-scrollbar{display:none;}
+.mob-fsel{flex:0 0 auto;min-width:80px;max-width:110px;background:var(--bg-base);border:1px solid var(--border-deep);border-radius:5px;color:var(--text-main);padding:3px 4px;font-family:'Cairo';font-size:0.62rem;}
+.mob-reset{flex:0 0 auto;background:rgba(239,68,68,0.12);border:1px solid #ef4444;color:#ef4444;border-radius:5px;font-family:'Cairo';font-size:0.62rem;font-weight:700;padding:3px 8px;cursor:pointer;white-space:nowrap;}
+@media(max-width:768px){
+  .section-nav{display:none!important;}
+  .filters-bar{display:none!important;}
+  .mob-bottom-nav{display:block;}
+  #mobFilterWrap{position:sticky;top:0;z-index:90;background:var(--bg-card);border-bottom:1px solid var(--border);padding:0;}
+  .mob-section{display:none;}
+  .mob-section.mob-active{display:block;}
+  .container{padding-bottom:70px;}
+  .header{padding:10px 14px;}
+  .header h1{font-size:1.1rem;}
+  .btn-upload span{display:none;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .charts-grid{grid-template-columns:1fr;}
+}
 .section-title.amber{color:#fbbf24;border-color:#fbbf24;}
 .section-title.purple{color:#a78bfa;border-color:#a78bfa;}
 .section-title.green{color:#34d399;border-color:#34d399;}
@@ -343,6 +369,18 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     تصدير Excel
   </button>
+</div>
+
+<!-- Mobile Filter Panel -->
+<div id="mobFilterWrap">
+  <div class="mob-filter-panel" id="mobFilterPanel">
+    <select class="mob-fsel" id="mobMonth" onchange="syncMobFilter('filterMonth',this)"><option value="">كل الأشهر</option></select>
+    <select class="mob-fsel" id="mobVisitType" onchange="syncMobFilter('filterVisitType',this)"><option value="">كل الأنواع</option></select>
+    <select class="mob-fsel" id="mobPract" onchange="syncMobFilter('filterPractitioner',this)"><option value="">كل الممارسين</option></select>
+    <select class="mob-fsel" id="mobBranch" onchange="syncMobFilter('filterBranch',this)"><option value="">كل الفروع</option></select>
+    <select class="mob-fsel" id="mobPayment" onchange="syncMobFilter('filterPayment',this)"><option value="">كل طرق السداد</option></select>
+    <button class="mob-reset" onclick="resetFilters()">↺</button>
+  </div>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -2055,7 +2093,124 @@ function closeDrillModal(){
   if(_drillChart){try{_drillChart.destroy();}catch(e){}_drillChart=null;}
 }
 
+/* ── Mobile Layout ── */
+const MOB_SECTIONS=['sec-overview','sec-income','sec-visits','sec-pract','sec-patients','sec-days','sec-ambulance','sec-matches'];
+let _mobCurrentSection='sec-overview';
+let _mobInited=false;
+
+function isMobile(){return window.innerWidth<=768;}
+
+function initMobile(){
+  if(!isMobile()||_mobInited)return;
+  _mobInited=true;
+  const container=document.querySelector('.container');
+  // Wrap each section's content
+  MOB_SECTIONS.forEach((id,idx)=>{
+    const titleEl=document.getElementById(id);
+    if(!titleEl)return;
+    // Check if already wrapped
+    if(titleEl.parentElement.classList.contains('mob-section'))return;
+    const wrap=document.createElement('div');
+    wrap.className='mob-section';
+    wrap.dataset.sec=id;
+    container.insertBefore(wrap,titleEl);
+    wrap.appendChild(titleEl);
+    // Move siblings until next section or end
+    const nextId=MOB_SECTIONS[idx+1];
+    const nextEl=nextId?document.getElementById(nextId):null;
+    let sib=wrap.nextSibling;
+    while(sib&&sib!==nextEl){
+      const n=sib.nextSibling;
+      wrap.appendChild(sib);
+      sib=n;
+    }
+  });
+  // Show first section only
+  switchMobSection(_mobCurrentSection,document.getElementById('mobbtn-'+_mobCurrentSection),false);
+  // Sync mob filter options from main filters
+  syncMobFilterOptions();
+}
+
+function switchMobSection(id,btn,doScroll=true){
+  if(!isMobile())return;
+  _mobCurrentSection=id;
+  document.querySelectorAll('.mob-section').forEach(s=>s.classList.remove('mob-active'));
+  document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('mob-active'));
+  const sec=document.querySelector('.mob-section[data-sec="'+id+'"]');
+  if(sec)sec.classList.add('mob-active');
+  if(btn)btn.classList.add('mob-active');
+  // Scroll nav button into view
+  if(btn)btn.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+  // Scroll content to top
+  if(doScroll)window.scrollTo({top:0,behavior:'smooth'});
+  // Resize charts in newly visible section
+  setTimeout(()=>{Object.values(charts).forEach(c=>{try{c.resize();}catch(e){}});},100);
+}
+
+function toggleMobFilter(){
+  const panel=document.getElementById('mobFilterPanel');
+  const icon=document.getElementById('mobFilterIcon');
+  const open=panel.style.display==='none';
+  panel.style.display=open?'flex':'none';
+  icon.textContent=open?'▲':'▼';
+}
+
+function syncMobFilter(mainId,sel){
+  const main=document.getElementById(mainId);
+  if(main){main.value=sel.value;}
+  applyFilters();
+  // Update badge
+  updateMobBadge();
+}
+
+function syncMobFilterOptions(){
+  const map={mobMonth:'filterMonth',mobVisitType:'filterVisitType',mobPract:'filterPractitioner',mobBranch:'filterBranch',mobPayment:'filterPayment'};
+  for(const[mobId,mainId]of Object.entries(map)){
+    const mob=document.getElementById(mobId);
+    const main=document.getElementById(mainId);
+    if(!mob||!main)continue;
+    mob.innerHTML=main.innerHTML;
+    mob.value=main.value;
+  }
+  updateMobBadge();
+}
+
+function updateMobBadge(){
+  const active=['filterMonth','filterVisitType','filterPractitioner','filterBranch','filterPayment','filterDriver'].filter(id=>{const el=document.getElementById(id);return el&&el.value;}).length;
+  const badge=document.getElementById('mobFilterBadge');
+  if(badge){badge.textContent=active>0?active+'':'';badge.className='filter-badge'+(active>0?' show':'');}
+}
+
+// Hook into applyFilters to sync mob selects after filter change
+const _origApplyFilters=applyFilters;
+// Patch populateFilters to also sync mob options
+const _origPopulateFilters=populateFilters;
+function populateFilters(data){
+  _origPopulateFilters(data);
+  if(isMobile())setTimeout(syncMobFilterOptions,0);
+}
+
+// Init on load
+window.addEventListener('DOMContentLoaded',()=>{
+  if(isMobile())setTimeout(initMobile,200);
+});
+window.addEventListener('resize',()=>{
+  if(isMobile()&&!_mobInited){initMobile();}
+});
+
 </script>
+<!-- Mobile Bottom Nav -->
+<nav class="mob-bottom-nav" id="mobBottomNav">
+  <button class="mob-nav-btn mob-active" id="mobbtn-sec-overview" onclick="switchMobSection('sec-overview',this)"><span class="mob-icon">🏠</span><span>عامة</span></button>
+  <button class="mob-nav-btn" id="mobbtn-sec-income" onclick="switchMobSection('sec-income',this)"><span class="mob-icon">💰</span><span>الدخل</span></button>
+  <button class="mob-nav-btn" id="mobbtn-sec-visits" onclick="switchMobSection('sec-visits',this)"><span class="mob-icon">🏥</span><span>الزيارات</span></button>
+  <button class="mob-nav-btn" id="mobbtn-sec-pract" onclick="switchMobSection('sec-pract',this)"><span class="mob-icon">👨‍⚕️</span><span>الممارسون</span></button>
+  <button class="mob-nav-btn" id="mobbtn-sec-patients" onclick="switchMobSection('sec-patients',this)"><span class="mob-icon">🧑‍🤝‍🧑</span><span>المرضى</span></button>
+  <button class="mob-nav-btn" id="mobbtn-sec-days" onclick="switchMobSection('sec-days',this)"><span class="mob-icon">📅</span><span>الأيام</span></button>
+  <button class="mob-nav-btn" id="mobbtn-sec-ambulance" onclick="switchMobSection('sec-ambulance',this)"><span class="mob-icon">🚑</span><span>إسعافي</span></button>
+  <button class="mob-nav-btn" id="mobbtn-sec-matches" onclick="switchMobSection('sec-matches',this)"><span class="mob-icon">⚽</span><span>مباريات</span></button>
+</nav>
+
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
