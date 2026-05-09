@@ -261,7 +261,6 @@ body{font-family:"Cairo",sans-serif;background:var(--bg-base);color:var(--text-m
     position:sticky;
     top:88px; /* header(50) + backbar(38) */
     z-index:170;
-    display:none; /* hidden on home, shown by JS in section view */
   }
 
   /* Sections */
@@ -599,7 +598,7 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
 </div>
 
 <!-- Mobile Filter Panel -->
-<div id="mobFilterWrap">
+<div id="mobFilterWrap" style="display:none">
   <div class="mob-filter-panel" id="mobFilterPanel">
     <select class="mob-fsel" id="mobMonth" onchange="syncMobFilter('filterMonth',this)"><option value="">كل الأشهر</option></select>
     <select class="mob-fsel" id="mobVisitType" onchange="syncMobFilter('filterVisitType',this)"><option value="">كل الأنواع</option></select>
@@ -2448,7 +2447,7 @@ function showMobSection(id){
   if(sec)sec.classList.add('mob-active');
   // Show filter bar
   const fw=document.getElementById('mobFilterWrap');
-  if(fw)fw.style.display='';
+  if(fw)fw.style.display='block';
   // Show + update back bar
   const bb=document.getElementById('mobBackBar');
   const bt=document.getElementById('mobBackTitle');
