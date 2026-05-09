@@ -1,6 +1,5 @@
 const CACHE = 'dashboard-v3';
 const CORE = [
-  './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
@@ -9,7 +8,7 @@ const CORE = [
   'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap'
 ];
 
-// تثبيت: خزّن الملفات الأساسية
+// تثبيت
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())
@@ -25,19 +24,36 @@ self.addEventListener('activate', e => {
   );
 });
 
-// طلبات الشبكة: الكاش أولاً، وإلا من الشبكة
+// الطلبات: HTML دايماً من الشبكة (network-first) — باقي الملفات من الكاش
 self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(res => {
-        // خزّن الردود الناجحة فقط
-        if (res && res.status === 200 && res.type !== 'opaque') {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
+  const req = e.request;
+  const url = new URL(req.url);
+
+  // HTML: network first → كاش احتياطي
+  if (req.destination === 'document' ||
+      url.pathname.endsWith('.html') ||
+      url.pathname.endsWith('/')) {
+    e.respondWith(
+      fetch(req).then(res => {
+        if (res && res.status === 200) {
+          caches.open(CACHE).then(c => c.put(req, res.clone()));
         }
         return res;
-      }).catch(() => cached); // في حال الشبكة فاشلة، ارجع للكاش
+      }).catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // باقي الملفات: كاش first
+  e.respondWith(
+    caches.match(req).then(cached => {
+      if (cached) return cached;
+      return fetch(req).then(res => {
+        if (res && res.status === 200 && res.type !== 'opaque') {
+          caches.open(CACHE).then(c => c.put(req, res.clone()));
+        }
+        return res;
+      }).catch(() => cached);
     })
   );
 });
