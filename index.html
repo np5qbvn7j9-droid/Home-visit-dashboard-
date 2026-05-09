@@ -84,47 +84,116 @@ body{font-family:"Cairo",sans-serif;background:var(--bg-base);color:var(--text-m
 /* Section titles */
 .section-title{font-size:1.02rem;font-weight:700;color:#38bdf8;margin:22px 0 11px;padding-right:12px;border-right:4px solid #38bdf8;scroll-margin-top:130px;}
 /* ══════════════════════════════════════════
-   MOBILE LAYOUT — Professional Design
+   MOBILE LAYOUT — Professional Design v2
 ══════════════════════════════════════════ */
-/* Bottom Nav */
-.mob-bottom-nav{
+/* Legacy bottom nav — hidden */
+.mob-bottom-nav{display:none!important;}
+.mob-nav-btn{display:none!important;}
+
+/* ── Date Bar ── */
+#mobDateBar{
   display:none;
-  position:fixed;bottom:0;left:0;right:0;
-  height:62px;
-  background:var(--bg-card);
-  border-top:1px solid var(--border);
-  z-index:300;
-  overflow-x:auto;overflow-y:hidden;
-  white-space:nowrap;
-  scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
-  box-shadow:0 -4px 20px rgba(0,0,0,0.3);
-}
-.mob-bottom-nav::-webkit-scrollbar{display:none;}
-.mob-nav-btn{
-  display:inline-flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:3px;min-width:68px;height:62px;
+  padding:4px 14px;
+  font-size:0.62rem;
   color:var(--text-muted);
-  font-size:0.58rem;font-family:'Cairo';font-weight:600;
-  border:none;background:transparent;cursor:pointer;
-  padding:6px 6px;
-  transition:all 0.2s;
-  position:relative;
+  background:var(--bg-base);
+  border-bottom:1px solid var(--border);
+  text-align:center;
+  letter-spacing:0.01em;
 }
-.mob-nav-btn::after{
-  content:'';position:absolute;
-  bottom:0;left:50%;transform:translateX(-50%);
-  width:0;height:2px;
-  background:#38bdf8;border-radius:2px 2px 0 0;
-  transition:width 0.25s ease;
+
+/* ── Back Bar ── */
+#mobBackBar{
+  display:none;
+  align-items:center;
+  gap:8px;
+  padding:7px 12px;
+  background:var(--bg-card);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:50px;
+  z-index:180;
+  box-shadow:0 2px 8px rgba(0,0,0,0.18);
 }
-.mob-nav-btn.mob-active{color:#38bdf8;}
-.mob-nav-btn.mob-active::after{width:70%;}
-.mob-nav-btn .mob-icon{font-size:1.25rem;line-height:1;}
-/* Filter Toggle — hidden (always open) */
+#mobBackBtn{
+  background:rgba(56,189,248,0.08);
+  border:1px solid rgba(56,189,248,0.3);
+  color:#38bdf8;
+  font-family:'Cairo';
+  font-size:0.75rem;font-weight:700;
+  cursor:pointer;
+  padding:4px 10px;
+  border-radius:7px;
+  display:flex;align-items:center;gap:4px;
+  white-space:nowrap;
+  transition:background 0.2s;
+}
+#mobBackBtn:active{background:rgba(56,189,248,0.18);}
+#mobBackTitle{
+  font-size:0.82rem;font-weight:700;
+  color:var(--text-main);
+  flex:1;text-align:center;
+}
+
+/* ── Home Screen ── */
+#mobHome{
+  padding:12px 10px 24px;
+  animation:mobFadeIn 0.2s ease;
+}
+.mob-home-header{
+  text-align:center;
+  margin-bottom:14px;
+}
+.mob-home-header h2{
+  font-size:1rem;font-weight:800;
+  background:linear-gradient(135deg,#38bdf8,#818cf8);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.mob-home-header p{font-size:0.68rem;color:var(--text-muted);margin-top:3px;}
+.mob-home-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.mob-sec-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px 14px 14px;
+  cursor:pointer;
+  transition:transform 0.14s,box-shadow 0.14s;
+  display:flex;flex-direction:column;
+  align-items:flex-start;gap:7px;
+  position:relative;overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+.mob-sec-card::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;
+  height:3px;
+  background:var(--acc,#38bdf8);
+}
+.mob-sec-card:active{
+  transform:scale(0.96);
+  box-shadow:0 4px 18px rgba(0,0,0,0.25);
+}
+.mob-sec-icon{font-size:1.65rem;line-height:1;}
+.mob-sec-name{font-size:0.8rem;font-weight:700;color:var(--text-main);line-height:1.2;}
+.mob-sec-arrow{
+  position:absolute;top:12px;left:12px;
+  font-size:0.75rem;color:var(--text-muted);
+  opacity:0.5;
+}
+
+/* ── Filter Toggle — hidden ── */
 .mob-filter-toggle{display:none!important;}
-/* Filter Row */
+
+/* ── Filter Row ── */
+#mobFilterWrap{
+  background:var(--bg-card);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 2px 6px rgba(0,0,0,0.15);
+}
 .mob-filter-panel{
   display:flex;flex-wrap:nowrap;
   overflow-x:auto;gap:6px;
@@ -142,147 +211,124 @@ body{font-family:"Cairo",sans-serif;background:var(--bg-base);color:var(--text-m
   border-radius:7px;
   color:var(--text-main);
   padding:3px 6px;
-  font-family:'Cairo';
-  font-size:0.65rem;
+  font-family:'Cairo';font-size:0.65rem;
   cursor:pointer;
-  transition:border-color 0.2s;
+  transition:border-color 0.2s,background 0.2s;
 }
 .mob-fsel:focus{outline:none;border-color:#38bdf8;}
+.mob-fsel.has-value{border-color:#38bdf8;background:rgba(56,189,248,0.08);color:#38bdf8;}
 .mob-reset{
   flex:0 0 auto;
   width:30px;height:30px;
   background:rgba(239,68,68,0.12);
-  border:1px solid #ef4444;
-  color:#ef4444;
+  border:1px solid #ef4444;color:#ef4444;
   border-radius:7px;
-  font-family:'Cairo';font-size:0.85rem;font-weight:700;
+  font-size:0.85rem;font-weight:700;
   cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  transition:all 0.2s;
+  transition:background 0.2s;
 }
 .mob-reset:active{background:rgba(239,68,68,0.25);}
-/* Section wrapper */
+
+/* ── Section wrapper ── */
 .mob-section{display:block;}
-/* Mobile media query */
+
+/* ════════════════
+   @media mobile
+════════════════ */
 @media(max-width:768px){
-  /* ── Header ── */
+  /* Header */
   .header{
-    padding:10px 14px;
+    padding:9px 14px;
     position:sticky;top:0;z-index:200;
     box-shadow:0 2px 12px rgba(0,0,0,0.3);
   }
-  .header h1{font-size:1.05rem;}
-  .subtitle{font-size:0.68rem;}
+  .header h1{font-size:0.95rem;}
+  .subtitle{display:none;}
   #lastDataDate{display:none;}
-  .btn-print,.btn-theme{display:none!important;}
+  .btn-print{display:none!important;}
+  .btn-theme{padding:5px 9px;font-size:0.72rem;}
+  .btn-upload{padding:6px 10px;border-radius:8px;}
   .btn-upload span{display:none;}
-  .btn-upload{padding:7px 10px;border-radius:8px;}
 
-  /* ── Filter bar ── */
+  /* Date + Back bars */
+  #mobDateBar{display:block;}
+
+  /* Filter + Section Nav */
   .section-nav{display:none!important;}
   .filters-bar{display:none!important;}
   #mobFilterWrap{
     position:sticky;
-    top:52px;
-    z-index:190;
-    background:var(--bg-card);
-    border-bottom:1px solid var(--border);
-    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    top:88px; /* header(50) + backbar(38) */
+    z-index:170;
+    display:none; /* hidden on home, shown by JS in section view */
   }
 
-  /* ── Sections ── */
+  /* Sections */
   .mob-section{display:none;}
-  .mob-section.mob-active{
-    display:block;
-    animation:mobFadeIn 0.22s ease;
-  }
+  .mob-section.mob-active{display:block;animation:mobFadeIn 0.22s ease;}
 
-  /* ── Container ── */
-  .container{padding:10px 10px 80px;}
+  /* Container */
+  .container{padding:0 0 24px;}
 
-  /* ── Bottom Nav ── */
-  .mob-bottom-nav{display:block;}
+  /* Section Title */
+  .section-title{font-size:0.9rem;margin:14px 10px 10px;padding-right:10px;scroll-margin-top:0;}
 
-  /* ── Section Title ── */
-  .section-title{
-    font-size:0.92rem;
-    margin:14px 0 10px;
-    padding-right:10px;
-    scroll-margin-top:0;
-  }
+  /* KPI Grid */
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin:0 10px 12px;}
+  .kpi-card{padding:12px;min-height:86px;border-radius:10px;}
+  .kpi-value{font-size:1.12rem;}
+  .kpi-label{font-size:0.66rem;}
+  .kpi-sub{font-size:0.61rem;margin-top:3px;}
+  .kpi-delta{font-size:0.59rem;padding:3px 6px;margin-top:5px;}
 
-  /* ── KPI Grid ── */
-  .kpi-grid{
-    grid-template-columns:repeat(2,1fr);
-    gap:9px;
-    margin-bottom:12px;
-  }
-  .kpi-card{
-    padding:12px 12px;
-    min-height:88px;
-    border-radius:10px;
-  }
-  .kpi-value{font-size:1.18rem;}
-  .kpi-label{font-size:0.67rem;}
-  .kpi-sub{font-size:0.62rem;margin-top:3px;}
-  .kpi-delta{font-size:0.6rem;padding:3px 6px;margin-top:5px;}
-
-  /* ── Charts ── */
-  .charts-grid{
-    grid-template-columns:1fr;
-    gap:10px;
-    margin-bottom:12px;
-  }
+  /* Charts */
+  .charts-grid{grid-template-columns:1fr;gap:10px;margin:0 10px 12px;}
   .chart-card{padding:12px;border-radius:10px;}
-  .chart-card h3{font-size:0.78rem;margin-bottom:8px;padding-bottom:7px;}
-  .chart-card canvas{max-height:210px!important;}
+  .chart-card h3{font-size:0.77rem;margin-bottom:8px;padding-bottom:6px;}
+  .chart-card canvas{max-height:205px!important;}
 
-  /* ── Tables ── */
-  .table-card{padding:10px;border-radius:10px;margin-bottom:10px;}
-  .table-card h3{font-size:0.78rem;margin-bottom:8px;padding-bottom:7px;}
-  th{font-size:0.67rem;padding:6px 7px;}
-  td{font-size:0.72rem;padding:5px 7px;}
+  /* Tables */
+  .table-card{padding:10px;border-radius:10px;margin:0 10px 10px;}
+  .table-card h3{font-size:0.77rem;margin-bottom:8px;padding-bottom:6px;}
+  th{font-size:0.66rem;padding:6px 7px;}
+  td{font-size:0.71rem;padding:5px 7px;}
 
-  /* ── Alerts ── */
-  .alerts-wrap{gap:6px;margin-bottom:10px;}
-  .alert-item{font-size:0.76rem;padding:9px 11px;}
+  /* Alerts */
+  .alerts-wrap{gap:6px;margin:0 10px 10px;}
+  .alert-item{font-size:0.75rem;padding:9px 11px;}
 
-  /* ── Summary ── */
-  .summary-card{padding:12px 14px;border-radius:10px;margin-bottom:12px;}
-  .summary-text{font-size:0.81rem;line-height:1.75;}
+  /* Summary */
+  .summary-card{padding:12px 14px;border-radius:10px;margin:0 10px 12px;}
+  .summary-text{font-size:0.8rem;line-height:1.72;}
 
-  /* ── Day Grid ── */
-  .day-grid{grid-template-columns:repeat(4,1fr);gap:6px;}
+  /* Day Grid */
+  .day-grid{grid-template-columns:repeat(4,1fr);gap:6px;margin:0 10px 12px;}
   .day-card{padding:8px 5px;border-radius:8px;}
-  .day-card .day-count{font-size:1rem;}
-  .day-card .day-name{font-size:0.63rem;}
-  .day-card .day-rev{font-size:0.62rem;}
+  .day-card .day-count{font-size:0.98rem;}
+  .day-card .day-name{font-size:0.62rem;}
+  .day-card .day-rev{font-size:0.61rem;}
 
-  /* ── Heatmap ── */
-  .matrix-wrap{max-height:320px;}
-  .matrix-table{font-size:0.68rem;}
-  .matrix-table th{font-size:0.65rem;padding:5px 6px;}
+  /* Heatmap */
+  .matrix-wrap{max-height:300px;}
+  .matrix-table{font-size:0.67rem;}
+  .matrix-table th{font-size:0.64rem;padding:5px 6px;}
   .matrix-table td{padding:5px 6px;}
 
-  /* ── Special Card ── */
-  .special-card{padding:12px;border-radius:10px;margin-bottom:10px;}
+  /* Special Card */
+  .special-card{padding:12px;border-radius:10px;margin:0 10px 10px;}
 
-  /* ── Tabs ── */
-  .tabs{gap:5px;margin-bottom:8px;}
-  .tab{padding:3px 10px;font-size:0.7rem;}
+  /* Tabs */
+  .tabs{gap:5px;margin:0 10px 8px;}
+  .tab{padding:3px 10px;font-size:0.69rem;}
+
+  /* Empty state */
+  #emptyState{padding:40px 16px;}
 }
 
-/* Fade-in animation for sections */
 @keyframes mobFadeIn{
   from{opacity:0;transform:translateY(6px);}
   to{opacity:1;transform:translateY(0);}
-}
-
-/* Active filter highlight */
-.mob-fsel.has-value{
-  border-color:#38bdf8;
-  background:rgba(56,189,248,0.08);
-  color:#38bdf8;
 }
 .section-title.amber{color:#fbbf24;border-color:#fbbf24;}
 .section-title.purple{color:#a78bfa;border-color:#a78bfa;}
@@ -501,13 +547,19 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
       <div class="subtitle" id="headerSubtitle">جميع الأشهر</div>
       <div style="font-size:0.65rem;color:#475569;" id="lastDataDate"></div>
     </div>
-    <button class="btn-print" onclick="window.print()" title="طباعة / تصدير PDF">🖨️ طباعة</button>
     <button class="btn-theme" id="btnTheme" onclick="toggleTheme()">🌙 غامق</button>
     <button class="btn-upload" onclick="document.getElementById('uploadModal').classList.add('open')">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
       تحديث البيانات
     </button>
   </div>
+</div>
+
+<!-- Mobile: Date Bar + Back Bar -->
+<div id="mobDateBar">آخر تحديث: —</div>
+<div id="mobBackBar">
+  <button id="mobBackBtn" onclick="showMobHome()">‹ رجوع</button>
+  <span id="mobBackTitle">نظرة عامة</span>
 </div>
 
 <!-- Section Nav -->
@@ -555,6 +607,56 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
     <select class="mob-fsel" id="mobBranch" onchange="syncMobFilter('filterBranch',this)"><option value="">كل الفروع</option></select>
     <select class="mob-fsel" id="mobPayment" onchange="syncMobFilter('filterPayment',this)"><option value="">كل طرق السداد</option></select>
     <button class="mob-reset" onclick="resetFilters()">↺</button>
+  </div>
+</div>
+
+<!-- Mobile Home Screen -->
+<div id="mobHome" style="display:none">
+  <div class="mob-home-header">
+    <h2>داشبورد الزيارات المنزلية</h2>
+    <p>اختر القسم للعرض</p>
+  </div>
+  <div class="mob-home-grid">
+    <div class="mob-sec-card" onclick="showMobSection('sec-overview')" style="--acc:#38bdf8">
+      <span class="mob-sec-arrow">›</span>
+      <span class="mob-sec-icon">🏠</span>
+      <span class="mob-sec-name">نظرة عامة</span>
+    </div>
+    <div class="mob-sec-card" onclick="showMobSection('sec-income')" style="--acc:#34d399">
+      <span class="mob-sec-arrow">›</span>
+      <span class="mob-sec-icon">💰</span>
+      <span class="mob-sec-name">تحليل الدخل</span>
+    </div>
+    <div class="mob-sec-card" onclick="showMobSection('sec-visits')" style="--acc:#38bdf8">
+      <span class="mob-sec-arrow">›</span>
+      <span class="mob-sec-icon">🏥</span>
+      <span class="mob-sec-name">الزيارات المنزلية</span>
+    </div>
+    <div class="mob-sec-card" onclick="showMobSection('sec-pract')" style="--acc:#a78bfa">
+      <span class="mob-sec-arrow">›</span>
+      <span class="mob-sec-icon">👨‍⚕️</span>
+      <span class="mob-sec-name">أداء الممارسين</span>
+    </div>
+    <div class="mob-sec-card" onclick="showMobSection('sec-patients')" style="--acc:#fb923c">
+      <span class="mob-sec-arrow">›</span>
+      <span class="mob-sec-icon">🧑‍🤝‍🧑</span>
+      <span class="mob-sec-name">تحليل المرضى</span>
+    </div>
+    <div class="mob-sec-card" onclick="showMobSection('sec-days')" style="--acc:#fbbf24">
+      <span class="mob-sec-arrow">›</span>
+      <span class="mob-sec-icon">📅</span>
+      <span class="mob-sec-name">أيام الأسبوع</span>
+    </div>
+    <div class="mob-sec-card" onclick="showMobSection('sec-ambulance')" style="--acc:#f472b6">
+      <span class="mob-sec-arrow">›</span>
+      <span class="mob-sec-icon">🚑</span>
+      <span class="mob-sec-name">النقل الإسعافي</span>
+    </div>
+    <div class="mob-sec-card" onclick="showMobSection('sec-matches')" style="--acc:#34d399">
+      <span class="mob-sec-arrow">›</span>
+      <span class="mob-sec-icon">⚽</span>
+      <span class="mob-sec-name">المباريات</span>
+    </div>
   </div>
 </div>
 
@@ -2268,9 +2370,21 @@ function closeDrillModal(){
   if(_drillChart){try{_drillChart.destroy();}catch(e){}_drillChart=null;}
 }
 
-/* ── Mobile Layout ── */
+/* ════════════════════════════════
+   MOBILE v2 — Home Screen Design
+════════════════════════════════ */
 const MOB_SECTIONS=['sec-overview','sec-income','sec-visits','sec-pract','sec-patients','sec-days','sec-ambulance','sec-matches'];
-let _mobCurrentSection='sec-overview';
+const MOB_SEC_INFO={
+  'sec-overview':{name:'نظرة عامة',icon:'🏠'},
+  'sec-income':{name:'تحليل الدخل',icon:'💰'},
+  'sec-visits':{name:'الزيارات المنزلية',icon:'🏥'},
+  'sec-pract':{name:'أداء الممارسين',icon:'👨‍⚕️'},
+  'sec-patients':{name:'تحليل المرضى',icon:'🧑‍🤝‍🧑'},
+  'sec-days':{name:'أيام الأسبوع',icon:'📅'},
+  'sec-ambulance':{name:'النقل الإسعافي',icon:'🚑'},
+  'sec-matches':{name:'المباريات',icon:'⚽'}
+};
+let _mobCurrentSection=null;
 let _mobInited=false;
 
 function isMobile(){return window.innerWidth<=768;}
@@ -2279,20 +2393,16 @@ function initMobile(){
   if(!isMobile()||_mobInited)return;
   _mobInited=true;
   const container=document.querySelector('.container');
-  // Wrap each section's content
+  // Wrap each section's content in .mob-section divs
   MOB_SECTIONS.forEach((id,idx)=>{
     const titleEl=document.getElementById(id);
-    if(!titleEl)return;
-    // Check if already wrapped
-    if(titleEl.parentElement.classList.contains('mob-section'))return;
+    if(!titleEl||titleEl.parentElement.classList.contains('mob-section'))return;
     const wrap=document.createElement('div');
     wrap.className='mob-section';
     wrap.dataset.sec=id;
     container.insertBefore(wrap,titleEl);
     wrap.appendChild(titleEl);
-    // Move siblings until next section or end
-    const nextId=MOB_SECTIONS[idx+1];
-    const nextEl=nextId?document.getElementById(nextId):null;
+    const nextEl=MOB_SECTIONS[idx+1]?document.getElementById(MOB_SECTIONS[idx+1]):null;
     let sib=wrap.nextSibling;
     while(sib&&sib!==nextEl){
       const n=sib.nextSibling;
@@ -2300,56 +2410,65 @@ function initMobile(){
       sib=n;
     }
   });
-  // Show first section only
-  switchMobSection(_mobCurrentSection,document.getElementById('mobbtn-'+_mobCurrentSection),false);
-  // Sync mob filter options from main filters
+  // Show home screen
+  showMobHome();
+  // Sync filter options
   syncMobFilterOptions();
+  // Update date bar
+  const dateEl=document.getElementById('lastDataDate');
+  const bar=document.getElementById('mobDateBar');
+  if(bar&&dateEl&&dateEl.textContent)bar.textContent='آخر تحديث: '+dateEl.textContent;
 }
 
-const MOB_SEC_NAMES={
-  'sec-overview':'نظرة عامة',
-  'sec-income':'تحليل الدخل',
-  'sec-visits':'الزيارات المنزلية',
-  'sec-pract':'أداء الممارسين',
-  'sec-patients':'تحليل المرضى',
-  'sec-days':'أيام الأسبوع',
-  'sec-ambulance':'النقل الإسعافي',
-  'sec-matches':'المباريات'
-};
+function showMobHome(){
+  if(!isMobile())return;
+  _mobCurrentSection=null;
+  // Hide all sections
+  document.querySelectorAll('.mob-section').forEach(s=>s.classList.remove('mob-active'));
+  // Hide filter + back bar
+  const fw=document.getElementById('mobFilterWrap');
+  const bb=document.getElementById('mobBackBar');
+  if(fw)fw.style.display='none';
+  if(bb)bb.style.display='none';
+  // Show home
+  const home=document.getElementById('mobHome');
+  if(home)home.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-function switchMobSection(id,btn,doScroll=true){
+function showMobSection(id){
   if(!isMobile())return;
   _mobCurrentSection=id;
+  // Hide home
+  const home=document.getElementById('mobHome');
+  if(home)home.style.display='none';
+  // Hide all sections, show chosen
   document.querySelectorAll('.mob-section').forEach(s=>s.classList.remove('mob-active'));
-  document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('mob-active'));
   const sec=document.querySelector('.mob-section[data-sec="'+id+'"]');
   if(sec)sec.classList.add('mob-active');
-  if(btn)btn.classList.add('mob-active');
-  // Update header subtitle with section name
-  const sub=document.getElementById('headerSubtitle');
-  if(sub)sub.textContent=MOB_SEC_NAMES[id]||'';
-  // Scroll nav button into view
-  if(btn)btn.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
-  // Scroll content to top
-  if(doScroll)window.scrollTo({top:0,behavior:'smooth'});
-  // Resize charts in newly visible section
-  setTimeout(()=>{Object.values(charts).forEach(c=>{try{c.resize();}catch(e){}});},100);
+  // Show filter bar
+  const fw=document.getElementById('mobFilterWrap');
+  if(fw)fw.style.display='';
+  // Show + update back bar
+  const bb=document.getElementById('mobBackBar');
+  const bt=document.getElementById('mobBackTitle');
+  if(bb)bb.style.display='flex';
+  if(bt){const info=MOB_SEC_INFO[id]||{};bt.textContent=(info.icon||'')+'  '+(info.name||id);}
+  syncMobFilterOptions();
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>{Object.values(charts).forEach(c=>{try{c.resize();}catch(e){}});},120);
 }
 
-function toggleMobFilter(){
-  const panel=document.getElementById('mobFilterPanel');
-  const icon=document.getElementById('mobFilterIcon');
-  const open=panel.style.display==='none';
-  panel.style.display=open?'flex':'none';
-  icon.textContent=open?'▲':'▼';
-}
+// Legacy alias — used by old onclick refs if any
+function switchMobSection(id){showMobSection(id);}
+
+function toggleMobFilter(){}// no-op (filter always visible in section view)
 
 function syncMobFilter(mainId,sel){
   const main=document.getElementById(mainId);
-  if(main){main.value=sel.value;}
+  if(main)main.value=sel.value;
   sel.classList.toggle('has-value',!!sel.value);
   applyFilters();
-  updateMobBadge();
 }
 
 function syncMobFilterOptions(){
@@ -2362,22 +2481,21 @@ function syncMobFilterOptions(){
     mob.value=main.value;
     mob.classList.toggle('has-value',!!mob.value);
   }
-  updateMobBadge();
 }
 
-function updateMobBadge(){
-  const active=['filterMonth','filterVisitType','filterPractitioner','filterBranch','filterPayment','filterDriver'].filter(id=>{const el=document.getElementById(id);return el&&el.value;}).length;
-  const badge=document.getElementById('mobFilterBadge');
-  if(badge){badge.textContent=active>0?active+'':'';badge.className='filter-badge'+(active>0?' show':'');}
-}
+function updateMobBadge(){}// badge removed
 
-// Hook into applyFilters to sync mob selects after filter change
-const _origApplyFilters=applyFilters;
-// Patch populateFilters to also sync mob options
+// Patch populateFilters to also sync mob selects
 const _origPopulateFilters=populateFilters;
 function populateFilters(data){
   _origPopulateFilters(data);
   if(isMobile())setTimeout(syncMobFilterOptions,0);
+  // Update date bar whenever data loads
+  setTimeout(()=>{
+    const dateEl=document.getElementById('lastDataDate');
+    const bar=document.getElementById('mobDateBar');
+    if(bar&&dateEl&&dateEl.textContent)bar.textContent='آخر تحديث: '+dateEl.textContent;
+  },200);
 }
 
 // Init on load
@@ -2385,21 +2503,11 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(isMobile())setTimeout(initMobile,200);
 });
 window.addEventListener('resize',()=>{
-  if(isMobile()&&!_mobInited){initMobile();}
+  if(isMobile()&&!_mobInited)initMobile();
 });
 
 </script>
-<!-- Mobile Bottom Nav -->
-<nav class="mob-bottom-nav" id="mobBottomNav">
-  <button class="mob-nav-btn mob-active" id="mobbtn-sec-overview" onclick="switchMobSection('sec-overview',this)"><span class="mob-icon">🏠</span><span>عامة</span></button>
-  <button class="mob-nav-btn" id="mobbtn-sec-income" onclick="switchMobSection('sec-income',this)"><span class="mob-icon">💰</span><span>الدخل</span></button>
-  <button class="mob-nav-btn" id="mobbtn-sec-visits" onclick="switchMobSection('sec-visits',this)"><span class="mob-icon">🏥</span><span>الزيارات</span></button>
-  <button class="mob-nav-btn" id="mobbtn-sec-pract" onclick="switchMobSection('sec-pract',this)"><span class="mob-icon">👨‍⚕️</span><span>الممارسون</span></button>
-  <button class="mob-nav-btn" id="mobbtn-sec-patients" onclick="switchMobSection('sec-patients',this)"><span class="mob-icon">🧑‍🤝‍🧑</span><span>المرضى</span></button>
-  <button class="mob-nav-btn" id="mobbtn-sec-days" onclick="switchMobSection('sec-days',this)"><span class="mob-icon">📅</span><span>الأيام</span></button>
-  <button class="mob-nav-btn" id="mobbtn-sec-ambulance" onclick="switchMobSection('sec-ambulance',this)"><span class="mob-icon">🚑</span><span>إسعافي</span></button>
-  <button class="mob-nav-btn" id="mobbtn-sec-matches" onclick="switchMobSection('sec-matches',this)"><span class="mob-icon">⚽</span><span>مباريات</span></button>
-</nav>
+<!-- Bottom nav removed — new home screen navigation -->
 
 <script>
 if('serviceWorker' in navigator){
