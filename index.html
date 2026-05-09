@@ -2509,10 +2509,15 @@ window.addEventListener('resize',()=>{
 <!-- Bottom nav removed — new home screen navigation -->
 
 <script>
+// Unregister any old service workers & clear all caches
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js').then(()=>console.log('SW registered')).catch(()=>{});
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  navigator.serviceWorker.getRegistrations().then(regs=>{
+    regs.forEach(r=>r.unregister());
   });
+}
+if('caches' in window){
+  caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));
 }
 </script>
 </body>
