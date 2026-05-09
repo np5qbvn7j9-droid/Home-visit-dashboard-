@@ -659,6 +659,7 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
   </div>
 </div>
 
+<div class="mob-section" data-sec="sec-overview">
 <!-- ════════════════════════════════════════
   0. نظرة عامة
 ════════════════════════════════════════ -->
@@ -680,6 +681,8 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
   <div class="chart-card full-width"><h3>الاتجاه الشهري — الزيارات والإيرادات</h3><canvas id="chartMonthly"></canvas></div>
 </div>
 
+</div><!-- /mob-section sec-overview -->
+<div class="mob-section" data-sec="sec-income">
 <!-- ════════════════════════════════════════
   1. تحليل الدخل
 ════════════════════════════════════════ -->
@@ -701,6 +704,8 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
   <div class="chart-card"><h3>الإيراد التراكمي بمرور الوقت</h3><canvas id="chartCumulativeRev"></canvas></div>
 </div>
 
+</div><!-- /mob-section sec-income -->
+<div class="mob-section" data-sec="sec-visits">
 <!-- ════════════════════════════════════════
   2. تحليل الزيارات المنزلية
 ════════════════════════════════════════ -->
@@ -754,6 +759,8 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
 </div>
 
 
+</div><!-- /mob-section sec-visits -->
+<div class="mob-section" data-sec="sec-pract">
 <!-- ════════════════════════════════════════
   5. أداء الممارسين
 ════════════════════════════════════════ -->
@@ -783,6 +790,8 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
   </div>
 </div>
 
+</div><!-- /mob-section sec-pract -->
+<div class="mob-section" data-sec="sec-patients">
 <!-- ════════════════════════════════════════
   3. تحليل المرضى
 ════════════════════════════════════════ -->
@@ -811,6 +820,8 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
   </div>
 </div>
 
+</div><!-- /mob-section sec-patients -->
+<div class="mob-section" data-sec="sec-days">
 <!-- ════════════════════════════════════════
   4. تحليل أيام الأسبوع
 ════════════════════════════════════════ -->
@@ -823,8 +834,10 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
   <div class="chart-card"><h3>متوسط المبلغ حسب يوم الأسبوع</h3><canvas id="chartDayAvg"></canvas></div>
 </div>
 
+</div><!-- /mob-section sec-days -->
+<div class="mob-section" data-sec="sec-ambulance">
 <!-- ════════════════════════════════════════
-  6. المباريات والنقل الإسعافي
+  6. النقل الإسعافي
 ════════════════════════════════════════ -->
 <!-- ════ النقل الإسعافي ════ -->
 <div class="section-title rose" id="sec-ambulance">النقل الإسعافي</div>
@@ -850,6 +863,8 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
   </div>
 </div>
 
+</div><!-- /mob-section sec-ambulance -->
+<div class="mob-section" data-sec="sec-matches">
 <!-- ════ المباريات ════ -->
 <div class="section-title purple" id="sec-matches">المباريات</div>
 <div class="kpi-grid">
@@ -899,6 +914,8 @@ body.light tr:hover{background:rgba(3,105,161,0.04) !important;}
   <div id="matchSearchCount" style="font-size:0.7rem;color:#64748b;margin-top:6px;text-align:left;"></div>
 </div>
 
+
+</div><!-- /mob-section sec-matches -->
 
 <!-- Drill-down Detail Modal -->
 <div class="modal-overlay" id="drillModal" onclick="if(event.target===this)closeDrillModal()">
@@ -2391,32 +2408,15 @@ function isMobile(){return window.innerWidth<=768;}
 function initMobile(){
   if(!isMobile()||_mobInited)return;
   _mobInited=true;
-  const container=document.querySelector('.container');
-  // Wrap each section's content in .mob-section divs
-  MOB_SECTIONS.forEach((id,idx)=>{
-    const titleEl=document.getElementById(id);
-    if(!titleEl||titleEl.parentElement.classList.contains('mob-section'))return;
-    const wrap=document.createElement('div');
-    wrap.className='mob-section';
-    wrap.dataset.sec=id;
-    container.insertBefore(wrap,titleEl);
-    wrap.appendChild(titleEl);
-    const nextEl=MOB_SECTIONS[idx+1]?document.getElementById(MOB_SECTIONS[idx+1]):null;
-    let sib=wrap.nextSibling;
-    while(sib&&sib!==nextEl){
-      const n=sib.nextSibling;
-      wrap.appendChild(sib);
-      sib=n;
-    }
-  });
-  // Show home screen
+  // Sections are statically wrapped in HTML — just show home
   showMobHome();
-  // Sync filter options
   syncMobFilterOptions();
   // Update date bar
-  const dateEl=document.getElementById('lastDataDate');
-  const bar=document.getElementById('mobDateBar');
-  if(bar&&dateEl&&dateEl.textContent)bar.textContent='آخر تحديث: '+dateEl.textContent;
+  setTimeout(()=>{
+    const dateEl=document.getElementById('lastDataDate');
+    const bar=document.getElementById('mobDateBar');
+    if(bar&&dateEl&&dateEl.textContent)bar.textContent='آخر تحديث: '+dateEl.textContent;
+  },300);
 }
 
 function showMobHome(){
