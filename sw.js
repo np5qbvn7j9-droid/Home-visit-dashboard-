@@ -1,4 +1,4 @@
-const CACHE = 'dashboard-v1';
+const CACHE = 'dashboard-v2';
 const CORE = [
   './index.html',
   './manifest.json',
